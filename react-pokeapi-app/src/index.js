@@ -1,12 +1,31 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {createStore, applyMiddleware} from 'redux'
+import{Provider} from 'react-redux'
+import thunk from 'redux-thunk'
+import logger from 'redux-logger'
+
+/////Reducer import///////
+import {pokeReducer} from './Store/Reducers/PokeReducer'
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import axios from 'axios';
+import {pokeURL} from './PokeURL/PokemonURL'
+
+const store = createStore(pokeReducer, applyMiddleware(thunk, logger))
+
+axios.get(pokeURL)
+.then(response=>{
+  console.log(response.data.results)
+})
+.catch(error=>{
+  console.log(error)
+})
 
 ReactDOM.render(
-  <React.StrictMode>
+  <Provider store={store}>
     <App />
-  </React.StrictMode>,
+  </Provider>,
   document.getElementById('root')
 );
 
